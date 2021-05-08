@@ -29,6 +29,7 @@
 import streamlit as st
 from dataclasses import dataclass
 from typing import Any, List
+from crypto_wallet import generate_account, get_balance, send_transaction
 
 ################################################################################
 # Step 1:
@@ -43,22 +44,6 @@ from typing import Any, List
 
 # Complete the following steps:
 
-# 1. Review the code contained in the `crypto_wallet.py` script file. Note that
-# the Ethereum transaction functions that you have built throughout this
-# module-including `wallet`, `wallet.derive_acount`, `get_balance`, `fromWei`,
-# `estimateGas`, `sendRawTransaction`, and others&mdash;have now been
-# incorporated into Python functions that allow you to automate the process of
-# accessing them.
-
-# 2. Add your mnemonic seed phrase and your Infura project id (both of which
-# you created earlier in the module) to the starter code’s `SAMPLE.env` file.
-# When the information has been added, rename the file `.env`.
-
-# 3. Import the following functions from the `crypto_wallet.py` file:
-# * `generate_account`
-# * `get_balance`
-# * `send_transaction`
-
 # 4. Within the Streamlit sidebar section of code, create a variable named
 # `account`. Set this variable equal to a call on the `generate_account`
 # function. This function will create the Fintech Finder customer’s (in this
@@ -69,17 +54,6 @@ from typing import Any, List
 # customer’s account. Inside this function, call the `get_balance` function
 # and pass it your Ethereum `account.address`.
 
-################################################################################
-# Step 1 - Part 3:
-# Import the following functions from the `crypto_wallet.py` file:
-# * `generate_account`
-# * `get_balance`
-# * `send_transaction`
-
-# @TODO:
-# From `crypto_wallet.py import the functions generate_account, get_balance,
-#  and send_transaction
-# YOUR CODE HERE
 
 ################################################################################
 # Fintech Finder Candidate Information
@@ -122,15 +96,8 @@ st.text(" \n")
 
 st.sidebar.markdown("## Client Account Address and Ethernet Balance in Ether")
 
-##########################################
-# Step 1 - Part 4:
-# Create a variable named `account`. Set this variable equal to a call on the
-# `generate_account` function. This function will create the Fintech Finder
-# customer’s (in this case, your) HD wallet and Ethereum account.
-
-# @TODO:
-#  Call the `generate_account` function and save it as the variable `account`
-# YOUR CODE HERE
+# generate the account to create the Fintech Finder customer’s (in this case, your) HD wallet and Ethereum account.
+account = generate_account()
 
 ##########################################
 
@@ -138,15 +105,12 @@ st.sidebar.markdown("## Client Account Address and Ethernet Balance in Ether")
 st.sidebar.write(account.address)
 
 ##########################################
-# Step 1 - Part 5:
-# Define a new `st.sidebar.write` function that will display the balance of the
-# customer’s account. Inside this function, call the `get_balance` function and
-#  pass it your Ethereum `account.address`.
 
-# @TODO
 # Call `get_balance` function and pass it your account address
 # Write the returned ether balance to the sidebar
-# YOUR CODE HERE
+ether_balance = get_balance(account.address)
+st.sidebar.write(ether_balance)
+
 
 ##########################################
 
@@ -237,11 +201,11 @@ st.sidebar.markdown("## Total Wage in Ether")
 # Calculate total `wage` for the candidate by multiplying the candidate’s hourly
 # rate from the candidate database (`candidate_database[person][3]`) by the
 # value of the `hours` variable
-# YOUR CODE HERE
+wage = hours*hourly_rate
 
 # @TODO
 # Write the `wage` calculation to the Streamlit sidebar
-# YOUR CODE HERE
+st.sidebar.write(wage)
 
 ##########################################
 # Step 2 - Part 2:
@@ -268,7 +232,7 @@ if st.sidebar.button("Send Transaction"):
     # Call the `send_transaction` function and pass it 3 parameters:
     # Your `account`, the `candidate_address`, and the `wage` as parameters
     # Save the returned transaction hash as a variable named `transaction_hash`
-    # YOUR CODE HERE
+    transaction_hash = send_transaction(account, candidate_address, wage)
 
     # Markdown for the transaction hash
     st.sidebar.markdown("#### Validated Transaction Hash")
